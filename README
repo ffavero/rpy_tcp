@@ -1,0 +1,22 @@
+If you need to generate images, graphs, or perform a  statistical 
+analysis, in a Web application, R-cran is a very helpful resource.
+
+In order to do so there are few options, most of them require to run R 
+directly on the Web-server (Rapache for instance, or Rpy on 
+CGI/mod_perl).
+Most system Admin are not happy about that, because R might have some 
+bad influence on the server performance, degrading the performance of 
+all the server, and all the consequential implications.
+
+A solution can be reached by the implementation of a small socket 
+server, written in python and using the Rpy library to execute R 
+functions passed from a proper client script.
+
+basic usage:
+
+#Server Start:
+python rpyserver.py 9999
+
+#Client
+python rpyclient.py localhost:9999 'pdf(file="plot1.pdf")/plot(x=c(1:10),y=c(1:10))/dev.off()'
+
