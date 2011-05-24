@@ -12,10 +12,12 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
       print "%s wrote:" % self.client_address[0]
       print self.data
       # evaluate the data passed as a string of R code
-      results = robjects.r(self.data)
-      # return the result of the evaluation as a string
-      # to the client
-      self.wfile.write(str(results))
+      try:
+         results = robjects.r(self.data)
+      except:
+         self.wfile.write('System error, sorry')         
+      if str(results):
+         self.wfile.write(str(results))
 
 if __name__ == "__main__":
    HOST, PORT = "localhost", int(sys.argv[1])
