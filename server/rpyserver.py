@@ -12,7 +12,6 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
       print "%s wrote:" % self.client_address[0]
       print self.data
       # evaluate the data passed as a string of R code
-      robjects.r('gc()')
       results = robjects.r(self.data)
       # return the result of the evaluation as a string
       # to the client
