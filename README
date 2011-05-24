@@ -19,4 +19,5 @@ python rpyserver.py 9999
 
 #Client
 python rpyclient.py localhost:9999 'pdf(file="plot1.pdf")/plot(x=c(1:10),y=c(1:10))/dev.off()'
-
+# in order to see the system under heavy computation: (can be done in different client also)
+python rpyclient.py localhost:9090 'pdf(file="plot1.pdf")/plot(x=c(1:1000000),y=c(1:1000000))/dev.off()'
