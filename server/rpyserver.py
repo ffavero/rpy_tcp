@@ -18,20 +18,21 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 
       # Import the Dict of the functions in utils
       funcs = functions.FUNCTS
-
       # Decoding the JSON coming from the client
       CODE = self.data['function']
       if self.data['argvs']:
+         print "With args"
          ARGS  = self.data['argvs']
 
       # evaluate the given function
          try:
-            results = getattr(functions, funcs[self.data])(ARGS)
+            results = getattr(functions, funcs[CODE])(ARGS)
          except:
             self.wfile.write('System error, sorry')
       else:
+         print "No args"
          try:
-            results = getattr(functions, funcs[self.data])()  
+            results = getattr(functions, funcs[CODE])()  
          except:
             self.wfile.write('System error, sorry')
       if str(results):
