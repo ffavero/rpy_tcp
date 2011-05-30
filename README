@@ -31,7 +31,7 @@ python server/rpyserver.py 9999
 # Write a simple client that stream a JSON encoded file...
 # (to implement in future functions with arguments)
 
-python server/rpyclient.py localhost:9999 VERSION
+python client/rpyclient.py localhost:9999 VERSION
 
 
 
