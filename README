@@ -14,9 +14,31 @@ functions passed from a proper client script.
 
 basic usage:
 
-#Server Start:
-python rpyserver.py 9999
+implement a small function in Rpy2 in the file server/utils/functions.py,
+and insert the name and corrisponding CODE in the python dictionary "FUCS":
 
+FUNCTS = {
+ 'VERSION': 'version',
+}
+
+def version():
+   res = robjects.r('R.version')
+   return res
+
+#Server Start:
+python server/rpyserver.py 9999
+
+# Write a simple client that stream a JSON encoded file...
+# (to implement in future functions with arguments)
+
+python server/rpyclient.py localhost:9999 VERSION
+
+
+
+
+
+
+OLD.....
 # Client
 python rpyclient.py localhost:9999 'pdf(file="plot1.pdf")/plot(x=c(1:10),y=c(1:10))/dev.off()'
 # in order to see the system under heavy computation: (can be done in different client also)
