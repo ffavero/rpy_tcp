@@ -1,21 +1,39 @@
 import SocketServer
 import sys
-import rpy2.robjects as robjects
+## To be changed in version <2.6 in inport simplejson
+import json as simplejson
+from utils import functions
 
 class MyTCPHandler(SocketServer.StreamRequestHandler):
 
    def handle(self):
       # self.rfile is a file-like object created by the handler;
       # we can now use e.g. readline() instead of raw recv() calls
-      self.data = self.rfile.readline().strip()
+      # Read the data and re-encode it in JSON
+      self.data = simplejson.loads(self.rfile.readline().strip())
       # verbose server
       print "%s wrote:" % self.client_address[0]
       print self.data
-      # evaluate the data passed as a string of R code
-      try:
-         results = robjects.r(self.data)
-      except:
-         self.wfile.write('System error, sorry')         
+      results = ''
+
+      # Import the Dict of the functions in utils
+      funcs = functions.FUNCTS
+
+      # Decoding the JSON coming from the client
+      CODE = self.data['function']
+      if self.data['argvs']:
+         ARGS  = self.data['argvs']
+
+      # evaluate the given function
+         try:
+            results = getattr(functions, funcs[self.data])(ARGS)
+         except:
+            self.wfile.write('System error, sorry')
+      else:
+         try:
+            results = getattr(functions, funcs[self.data])()  
+         except:
+            self.wfile.write('System error, sorry')
       if str(results):
          self.wfile.write(str(results))
 
