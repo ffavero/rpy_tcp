@@ -5,8 +5,9 @@ import sys
 HOST, PORT = sys.argv[1].split(":")
 PORT = int(PORT)
 function = sys.argv[2]
-argvs    = sys.argv[3:]
-data = simplejson.dumps({'function':function,'argvs':argvs})
+type     = sys.argv[3] 
+argvs    = sys.argv[4:]
+data = simplejson.dumps({'function':function,'type':type,'argvs':argvs})
 
 # Create a socket (SOCK_STREAM means a TCP socket)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,8 +17,14 @@ sock.connect((HOST, PORT))
 sock.send(data + "\n")
 
 # Receive data from the server and shut down
-received = sock.recv(1024)
-sock.close()
 
-print "Sent:     %s" % data
-print "Received: %s" % received
+if type != 'stdout':
+   filesize = int(sock.recv(1024))
+   received = ''
+   while len(received) < filesize:
+      received += sock.recv( filesize - len(received) )
+   sock.close()
+else:
+   received = sock.recv(1024)
+#print "Sent:     %s" % data
+print  received

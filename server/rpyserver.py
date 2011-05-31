@@ -1,5 +1,6 @@
 import SocketServer
 import sys
+import os
 ## To be changed in version <2.6 in inport simplejson
 import json as simplejson
 from utils import functions
@@ -18,8 +19,15 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 
       # Import the Dict of the functions in utils
       funcs = functions.FUNCTS
-      # Decoding the JSON coming from the client
+      # Take the information from the JSON coming from the client
       CODE = self.data['function']
+      if self.data['type'] == 'stdout':
+         TYPE = self.data['type']
+      else:
+         try:
+            TYPE, FILE = self.data['type'].split(':')
+         except:
+            print 'Misformat request type. results redirect in stdout'
       if self.data['argvs']:
          print "With args"
          ARGVS = self.data['argvs']
@@ -36,7 +44,18 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
          except:
             self.wfile.write('System error, sorry')
       if str(results):
-         self.wfile.write(str(results))
+         if FILE:
+            filesize = os.path.getsize(FILE)
+            self.wfile.write(str(filesize))
+            results = ''
+            with open(FILE, "rb") as f:
+               byte = f.read(1)
+               while byte != "":
+                  results += byte
+                  byte = f.read(1)
+            self.wfile.write(str(results))
+         else:
+            self.wfile.write(str(results))
 
 if __name__ == "__main__":
    HOST, PORT = "localhost", int(sys.argv[1])
