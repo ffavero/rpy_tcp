@@ -4,8 +4,9 @@ import sys
 
 HOST, PORT = sys.argv[1].split(":")
 PORT = int(PORT)
-data = sys.argv[2]
-data = simplejson.dumps({'function':data,'argvs':''})
+function = sys.argv[2]
+argvs    = sys.argv[3:]
+data = simplejson.dumps({'function':function,'argvs':argvs})
 
 # Create a socket (SOCK_STREAM means a TCP socket)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

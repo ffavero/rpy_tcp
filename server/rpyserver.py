@@ -22,11 +22,11 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
       CODE = self.data['function']
       if self.data['argvs']:
          print "With args"
-         ARGS  = self.data['argvs']
-
+         ARGVS = self.data['argvs']
+         ARGVS = ARGVS[0].split(";")
       # evaluate the given function
          try:
-            results = getattr(functions, funcs[CODE])(ARGS)
+            results = getattr(functions, funcs[CODE])(ARGVS)
          except:
             self.wfile.write('System error, sorry')
       else:

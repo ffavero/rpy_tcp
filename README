@@ -34,7 +34,9 @@ python server/rpyserver.py 9999
 python client/rpyclient.py localhost:9999 VERSION
 
 
+#or with Arguments: each argument is ; separated, with no quote!
 
+python client/rpyclient.py localhost:9999 PLOT1 'file.pdf;1,2,3,4,5,6,7,8,9,10;1,2,3,4,5,6,7,8,9,10'
 
 
 

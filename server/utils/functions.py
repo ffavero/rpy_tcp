@@ -14,3 +14,16 @@ FUNCTS = {
 def version():
    res = robjects.r('R.version')
    return res
+
+def plot1(ARGVS):
+   x = [float(i) for i in ARGVS[1].split(',')]
+   y = [float(i) for i in ARGVS[2].split(',')]
+   robjects.r ('''
+      plotfunction <- function(file,x,y) {
+      pdf(file)
+      plot(x,y)
+      dev.off()
+      }
+   ''')
+   robjects.r['plotfunction'](file = ARGVS[0],x = x ,y = y)
+   return ARGVS[0] + ' is Ok'
