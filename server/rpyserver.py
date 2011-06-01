@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import SocketServer
 import sys
 import os
@@ -8,9 +9,19 @@ from utils import functions
 class MyTCPHandler(SocketServer.StreamRequestHandler):
 
    def handle(self):
-      # self.rfile is a file-like object created by the handler;
-      # we can now use e.g. readline() instead of raw recv() calls
+
       # Read the data and re-encode it in JSON
+      # The received data have the following structure:
+      # { 'function':'FUNCTION_TO_CALL',
+      #   'type'    :'stdout' # accepted value are 'stdout' and 'bin:namefile'
+      #   'argvs': { 'argv1':'content_argv1',
+      #              'argv1':'content_argv1',
+      #              'argv1':'content_argv1',
+      #              'argv1':'content_argv1',
+      #              ...
+      #             }
+      # }
+
       self.data = simplejson.loads(self.rfile.readline().strip())
       # verbose server
       print "%s wrote:" % self.client_address[0]
@@ -44,17 +55,18 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
          except:
             self.wfile.write('System error, sorry')
       if str(results):
-         if FILE:
-            filesize = os.path.getsize(FILE)
-            self.wfile.write(str(filesize))
-            results = ''
-            with open(FILE, "rb") as f:
-               byte = f.read(1)
-               while byte != "":
-                  results += byte
+         try:
+            if FILE:
+               filesize = os.path.getsize(FILE)
+               self.wfile.write(str(filesize))
+               results = ''
+               with open(FILE, "rb") as f:
                   byte = f.read(1)
-            self.wfile.write(str(results))
-         else:
+                  while byte != "":
+                     results += byte
+                     byte = f.read(1)
+               self.wfile.write(str(results))
+         except:
             self.wfile.write(str(results))
 
 if __name__ == "__main__":

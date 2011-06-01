@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import json as simplejson
 import socket
 import sys
@@ -26,5 +27,12 @@ if type != 'stdout':
    sock.close()
 else:
    received = sock.recv(1024)
-#print "Sent:     %s" % data
-print  received
+print "Sent:     %s" % data
+if type != 'stdout':
+   TYPE,FILE = type.split(':')
+   with open(FILE, "w") as f:  
+      f.write(received)
+   print  'File saved'
+
+else:
+   print "Received:   %s" % received

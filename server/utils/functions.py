@@ -7,7 +7,8 @@ import rpy2.robjects as robjects
 FUNCTS = {
  'VERSION': 'version',
  'PLOT1': 'plot1',
- 'STRESS':'stress'
+ 'STRESS':'stress',
+ 'CLEAN':'clean'
 }
 
 ## Start the various functions:
@@ -43,7 +44,17 @@ def stress():
    '''
    robjects.r ('''
       pdf(file="plot1.pdf")
-      plot(x=c(1:10000000),y=c(1:10000000))
+      plot(x=c(1:100000),y=c(1:100000))
       dev.off()
    ''')
    return 'Done\n' 
+
+def clean():
+   '''
+   Clean the memory from R workspace
+   '''
+   out = robjects.r('''
+      rm(list = ls())
+      gc()
+   ''')
+   return out 
